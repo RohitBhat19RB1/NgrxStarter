@@ -1,0 +1,60 @@
+<div class="container">
+    <h2>User List</h2>
+    
+    <ng-container *ngIf="loading$ | async; else userTable">
+      <p>Loading users...</p>
+    </ng-container>
+    
+    <ng-template #userTable>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users$ | async">
+            <td>{{ user.id }}</td>
+            <td>
+              <input 
+                [formControl]="editForms[user.id].get('name')" 
+                [readonly]="editForms[user.id].disabled"
+              >
+            </td>
+            <td>
+              <input 
+                [formControl]="editForms[user.id].get('username')" 
+                [readonly]="editForms[user.id].disabled"
+              >
+            </td>
+            <td>
+              <input 
+                [formControl]="editForms[user.id].get('email')" 
+                [readonly]="editForms[user.id].disabled"
+              >
+            </td>
+            <td>
+              <button 
+                (click)="toggleEdit(user)"
+                class="btn btn-secondary"
+              >
+                {{ editForms[user.id].disabled ? 'Edit' : 'Cancel' }}
+              </button>
+              <button 
+                *ngIf="!editForms[user.id].disabled"
+                (click)="saveUser(user)"
+                class="btn btn-primary"
+                [disabled]="!editForms[user.id].valid"
+              >
+                Save
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-template>
+  </div>
