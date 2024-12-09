@@ -1,5 +1,13 @@
 <div class="container">
     <h2>User List</h2>
+
+    <button class="btn btn-secondary" (click)="toggleBulkEdit()">
+    {{ bulkEditEnabled ? 'Cancel bulk edit' : 'Enable bulk Edit'}}
+    </button>
+
+    <button class="btn btn-secondary" (click)="saveAll()"
+    *ngIf="bulkEditEnabled"
+    > Save All</button>
     
     <ng-container *ngIf="loading$ | async; else userTable">
       <p>Loading users...</p>

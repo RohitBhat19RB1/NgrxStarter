@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
   users$: Observable<User[]>;
   loading$: Observable<boolean>;
   editForms: { [key: number]: FormGroup } = {};
+  bulkEditEnabled: boolean = false;
 
   constructor(
     private store: Store,
@@ -45,6 +46,13 @@ export class HomeComponent implements OnInit {
     form.enabled ? form.disable() : form.enable();
   }
 
+  toggleBulkEdit(){
+    this.bulkEditEnabled = !this.bulkEditEnabled;
+    Object.values(this.editForms).forEach(form => {
+      this.bulkEditEnabled ? form.enable() : form.disable();
+    });
+  }
+
   saveUser(user: User) {
     const form = this.editForms[user.id];
     if (form.valid) {
@@ -52,5 +60,25 @@ export class HomeComponent implements OnInit {
       this.store.dispatch(UserActions.updateUser({ user: updatedUser }));
       form.disable();
     }
+  }
+
+  saveAll(){
+    const updatedUsers: User[] = [];
+
+    for (const userId in this.editForms) {
+      const form = this.editForms[userId];
+      if(form.dirty && form.valid){
+        const updatedUser: User = {id: userId, ...form.value};
+        updatedUsers.push(updatedUser);
+      }
+    }
+
+    // if (updatedUsers.length){
+    //   this.store.dispatch(UserActions.bulkUpdateUsers(
+    //     { users: updatedUsers} 
+    //   ));
+    //   this.bulkEditEnabled = false;
+    //   Object.values(this.editForms).forEach(form => form.disable())
+    // }
   }
 }
