@@ -35,6 +35,7 @@ export class HomeComponent implements OnInit {
           username: [user.username, Validators.required],
           email: [user.email, [Validators.required, Validators.email]]
         });
+        this.editForms[user.id].disable();
       });
     });
   }
